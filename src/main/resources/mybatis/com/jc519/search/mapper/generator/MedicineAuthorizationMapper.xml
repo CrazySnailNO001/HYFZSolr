@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jc519.search.dao.generator.MedicineAuthorizationMapper">
+  <resultMap id="BaseResultMap" type="com.jc519.search.model.generator.MedicineAuthorization">
+    <constructor>
+      <idArg column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="company_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="division_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="user_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="control_division_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="control_user_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="control_company_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="medicine_product_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="division_medicine_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="authorization_price" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+      <arg column="status" javaType="java.lang.Byte" jdbcType="TINYINT" />
+      <arg column="is_delete" javaType="java.lang.Byte" jdbcType="TINYINT" />
+      <arg column="price_template_type_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="authorization_remark" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="create_user_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="update_user_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="update_time" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+    </constructor>
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, company_id, division_id, user_id, control_division_id, control_user_id, control_company_id, 
+    medicine_product_id, division_medicine_id, authorization_price, status, is_delete, 
+    price_template_type_id, authorization_remark, create_user_id, create_time, update_user_id, 
+    update_time
+  </sql>
+  <select id="selectByExample" parameterType="com.jc519.search.model.generator.MedicineAuthorizationExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from jc_medicine_authorization
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from jc_medicine_authorization
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from jc_medicine_authorization
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.jc519.search.model.generator.MedicineAuthorizationExample">
+    delete from jc_medicine_authorization
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.jc519.search.model.generator.MedicineAuthorization">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into jc_medicine_authorization (company_id, division_id, user_id, 
+      control_division_id, control_user_id, control_company_id, 
+      medicine_product_id, division_medicine_id, 
+      authorization_price, status, is_delete, 
+      price_template_type_id, authorization_remark, 
+      create_user_id, create_time, update_user_id, 
+      update_time)
+    values (#{companyId,jdbcType=INTEGER}, #{divisionId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, 
+      #{controlDivisionId,jdbcType=INTEGER}, #{controlUserId,jdbcType=INTEGER}, #{controlCompanyId,jdbcType=INTEGER}, 
+      #{medicineProductId,jdbcType=INTEGER}, #{divisionMedicineId,jdbcType=INTEGER}, 
+      #{authorizationPrice,jdbcType=DECIMAL}, #{status,jdbcType=TINYINT}, #{isDelete,jdbcType=TINYINT}, 
+      #{priceTemplateTypeId,jdbcType=INTEGER}, #{authorizationRemark,jdbcType=VARCHAR}, 
+      #{createUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=INTEGER}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jc519.search.model.generator.MedicineAuthorization">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into jc_medicine_authorization
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="companyId != null">
+        company_id,
+      </if>
+      <if test="divisionId != null">
+        division_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="controlDivisionId != null">
+        control_division_id,
+      </if>
+      <if test="controlUserId != null">
+        control_user_id,
+      </if>
+      <if test="controlCompanyId != null">
+        control_company_id,
+      </if>
+      <if test="medicineProductId != null">
+        medicine_product_id,
+      </if>
+      <if test="divisionMedicineId != null">
+        division_medicine_id,
+      </if>
+      <if test="authorizationPrice != null">
+        authorization_price,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="isDelete != null">
+        is_delete,
+      </if>
+      <if test="priceTemplateTypeId != null">
+        price_template_type_id,
+      </if>
+      <if test="authorizationRemark != null">
+        authorization_remark,
+      </if>
+      <if test="createUserId != null">
+        create_user_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateUserId != null">
+        update_user_id,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="companyId != null">
+        #{companyId,jdbcType=INTEGER},
+      </if>
+      <if test="divisionId != null">
+        #{divisionId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="controlDivisionId != null">
+        #{controlDivisionId,jdbcType=INTEGER},
+      </if>
+      <if test="controlUserId != null">
+        #{controlUserId,jdbcType=INTEGER},
+      </if>
+      <if test="controlCompanyId != null">
+        #{controlCompanyId,jdbcType=INTEGER},
+      </if>
+      <if test="medicineProductId != null">
+        #{medicineProductId,jdbcType=INTEGER},
+      </if>
+      <if test="divisionMedicineId != null">
+        #{divisionMedicineId,jdbcType=INTEGER},
+      </if>
+      <if test="authorizationPrice != null">
+        #{authorizationPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="priceTemplateTypeId != null">
+        #{priceTemplateTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="authorizationRemark != null">
+        #{authorizationRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null">
+        #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUserId != null">
+        #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.jc519.search.model.generator.MedicineAuthorizationExample" resultType="java.lang.Long">
+    select count(*) from jc_medicine_authorization
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update jc_medicine_authorization
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.companyId != null">
+        company_id = #{record.companyId,jdbcType=INTEGER},
+      </if>
+      <if test="record.divisionId != null">
+        division_id = #{record.divisionId,jdbcType=INTEGER},
+      </if>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=INTEGER},
+      </if>
+      <if test="record.controlDivisionId != null">
+        control_division_id = #{record.controlDivisionId,jdbcType=INTEGER},
+      </if>
+      <if test="record.controlUserId != null">
+        control_user_id = #{record.controlUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.controlCompanyId != null">
+        control_company_id = #{record.controlCompanyId,jdbcType=INTEGER},
+      </if>
+      <if test="record.medicineProductId != null">
+        medicine_product_id = #{record.medicineProductId,jdbcType=INTEGER},
+      </if>
+      <if test="record.divisionMedicineId != null">
+        division_medicine_id = #{record.divisionMedicineId,jdbcType=INTEGER},
+      </if>
+      <if test="record.authorizationPrice != null">
+        authorization_price = #{record.authorizationPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=TINYINT},
+      </if>
+      <if test="record.isDelete != null">
+        is_delete = #{record.isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="record.priceTemplateTypeId != null">
+        price_template_type_id = #{record.priceTemplateTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="record.authorizationRemark != null">
+        authorization_remark = #{record.authorizationRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUserId != null">
+        create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUserId != null">
+        update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update jc_medicine_authorization
+    set id = #{record.id,jdbcType=INTEGER},
+      company_id = #{record.companyId,jdbcType=INTEGER},
+      division_id = #{record.divisionId,jdbcType=INTEGER},
+      user_id = #{record.userId,jdbcType=INTEGER},
+      control_division_id = #{record.controlDivisionId,jdbcType=INTEGER},
+      control_user_id = #{record.controlUserId,jdbcType=INTEGER},
+      control_company_id = #{record.controlCompanyId,jdbcType=INTEGER},
+      medicine_product_id = #{record.medicineProductId,jdbcType=INTEGER},
+      division_medicine_id = #{record.divisionMedicineId,jdbcType=INTEGER},
+      authorization_price = #{record.authorizationPrice,jdbcType=DECIMAL},
+      status = #{record.status,jdbcType=TINYINT},
+      is_delete = #{record.isDelete,jdbcType=TINYINT},
+      price_template_type_id = #{record.priceTemplateTypeId,jdbcType=INTEGER},
+      authorization_remark = #{record.authorizationRemark,jdbcType=VARCHAR},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jc519.search.model.generator.MedicineAuthorization">
+    update jc_medicine_authorization
+    <set>
+      <if test="companyId != null">
+        company_id = #{companyId,jdbcType=INTEGER},
+      </if>
+      <if test="divisionId != null">
+        division_id = #{divisionId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="controlDivisionId != null">
+        control_division_id = #{controlDivisionId,jdbcType=INTEGER},
+      </if>
+      <if test="controlUserId != null">
+        control_user_id = #{controlUserId,jdbcType=INTEGER},
+      </if>
+      <if test="controlCompanyId != null">
+        control_company_id = #{controlCompanyId,jdbcType=INTEGER},
+      </if>
+      <if test="medicineProductId != null">
+        medicine_product_id = #{medicineProductId,jdbcType=INTEGER},
+      </if>
+      <if test="divisionMedicineId != null">
+        division_medicine_id = #{divisionMedicineId,jdbcType=INTEGER},
+      </if>
+      <if test="authorizationPrice != null">
+        authorization_price = #{authorizationPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="isDelete != null">
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="priceTemplateTypeId != null">
+        price_template_type_id = #{priceTemplateTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="authorizationRemark != null">
+        authorization_remark = #{authorizationRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null">
+        create_user_id = #{createUserId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUserId != null">
+        update_user_id = #{updateUserId,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jc519.search.model.generator.MedicineAuthorization">
+    update jc_medicine_authorization
+    set company_id = #{companyId,jdbcType=INTEGER},
+      division_id = #{divisionId,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      control_division_id = #{controlDivisionId,jdbcType=INTEGER},
+      control_user_id = #{controlUserId,jdbcType=INTEGER},
+      control_company_id = #{controlCompanyId,jdbcType=INTEGER},
+      medicine_product_id = #{medicineProductId,jdbcType=INTEGER},
+      division_medicine_id = #{divisionMedicineId,jdbcType=INTEGER},
+      authorization_price = #{authorizationPrice,jdbcType=DECIMAL},
+      status = #{status,jdbcType=TINYINT},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      price_template_type_id = #{priceTemplateTypeId,jdbcType=INTEGER},
+      authorization_remark = #{authorizationRemark,jdbcType=VARCHAR},
+      create_user_id = #{createUserId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_user_id = #{updateUserId,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

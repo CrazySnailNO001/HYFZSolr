@@ -1,0 +1,71 @@
+# Server configuration
+server:
+  port: 9050
+
+api:
+    host: localhost:9050
+# Spring configuration
+spring:
+  #应用(服务)名称
+  application:
+    profiles: @activatedProperties@
+    name: jc-search-microservice
+  datasource.jc:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://rm-bp13dz4j5kb15k6d0to.mysql.rds.aliyuncs.com:3306/jc519?useUnicode=true&characterEncoding=utf-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC&useSSL=true
+    username: jc_write_01
+    password: HyfzWrite!@#qwe893
+  datasource:
+    #dataSource Pool configuration
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    exceptionSorter: true
+    testOnReturn: false
+    poolPreparedStatements: true
+    filters: stat,wall,log4j
+    maxPoolPreparedStatementPerConnectionSize: 20
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+    useGlobalDataSourceStat: true
+  jackson:
+    time-zone: GMT+8
+
+  # REDIS (RedisProperties)
+  redis:
+    # Redis数据库索引（默认为0）
+    database: 0
+    host: 101.37.147.193
+    port: 6379
+    # Redis服务器连接密码（默认为空）
+    password: 9uskwSY2NgQsMcse
+    pool:
+      # 连接池最大连接数（使用负值表示没有限制）
+      max-active: 8
+      # 连接池最大阻塞等待时间（使用负值表示没有限制）
+      max-wait: -1
+      # 连接池中的最大空闲连接
+      max-idle: 8
+      # 连接池中的最小空闲连接
+      min-idle: 0
+    # 连接超时时间（毫秒）
+      timeout: 0
+
+
+#注册中心地址
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+# Logging configuration
+logging:
+  level:
+    org.springframework:
+      cloud: DEBUG
+    com.jc519: DEBUG

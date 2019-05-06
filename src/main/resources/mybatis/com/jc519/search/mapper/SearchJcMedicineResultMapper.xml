@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jc519.search.dao.SearchJcMedicineResultMapper">
+    <!-- 使用resultMap映射实体类和字段之间的一一对应关系 -->
+    <resultMap id="ResultMap" type="com.jc519.search.model.SearchJcMedicineResult">
+        <id property="id" column="id"/>
+        <result property="medicineProductId" column="medicine_product_id"/>
+        <result property="genericName" column="generic_name"/>
+        <result property="tradeName" column="trade_name"/>
+        <result property="imgUrl" column="img_url"/>
+        <result property="categoryId" column="cate_id"/>
+        <result property="cateSecondId" column="cate_second_id"/>
+        <result property="cateThirdId" column="cate_third_id"/>
+        <result property="genericCateId" column="generic_cate_id"/>
+        <result property="genericCateSecondId" column="generic_cate_second_id"/>
+        <result property="dosageFormId" column="dosage_form_id"/>
+        <result property="dosageFormName" column="dosage_form_name"/>
+        <result property="reimbursementType" column="reimbursement_type"/>
+        <result property="basicOrCommon" column="basic_or_common"/>
+        <result property="specification" column="specification"/>
+        <result property="produceEnterprice" column="produce_enterprice"/>
+        <result property="approvalNum" column="approval_num"/>
+        <result property="boxNum" column="box_num"/>
+        <result property="unitId" column="unit_id"/>
+        <result property="unitName" column="unit_name"/>
+        <result property="companyId" column="company_id"/>
+        <result property="companyName" column="company_name"/>
+        <result property="suggestedPrice" column="suggested_price"/>
+        <result property="availabilityPrice" column="availability_price"/>
+    </resultMap>
+
+    <resultMap id="AllControlMedicineResultMap" type="com.jc519.search.model.AllControlMedicineResult">
+        <id property="id" column="id"/>
+        <result property="medicineProductId" column="medicine_product_id"/>
+        <result property="genericName" column="generic_name"/>
+        <result property="tradeName" column="trade_name"/>
+        <result property="imgUrl" column="img_url"/>
+        <result property="categoryId" column="cate_id"/>
+        <result property="cateSecondId" column="cate_second_id"/>
+        <result property="cateThirdId" column="cate_third_id"/>
+        <result property="genericCateId" column="generic_cate_id"/>
+        <result property="genericCateSecondId" column="generic_cate_second_id"/>
+        <result property="dosageFormId" column="dosage_form_id"/>
+        <result property="dosageFormName" column="dosage_form_name"/>
+        <result property="reimbursementType" column="reimbursement_type"/>
+        <result property="basicOrCommon" column="basic_or_common"/>
+        <result property="specification" column="specification"/>
+        <result property="produceEnterprice" column="produce_enterprice"/>
+        <result property="approvalNum" column="approval_num"/>
+        <result property="boxNum" column="box_num"/>
+        <result property="unitId" column="unit_id"/>
+        <result property="unitName" column="unit_name"/>
+        <result property="companyId" column="company_id"/>
+        <result property="companyName" column="company_name"/>
+        <result property="suggestedPrice" column="suggested_price"/>
+        <result property="availabilityPrice" column="availability_price"/>
+        <result property="authId" column="auth_id"/>
+        <result property="channelId" column="channel_id"/>
+        <result property="controlChannelId" column="control_channel_id"/>
+        <result property="auControlCompanyId" column="au_control_company_id"/>
+        <result property="divisionMedicineId" column="division_medicine_id"/>
+        <result property="authorizationPrice" column="authorization_price"/>
+        <result property="status" column="status"/>
+        <result property="isDelete" column="is_delete"/>
+        <result property="authorizationRemark" column="authorization_remark"/>
+        <result property="createUserId" column="create_user_id"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <resultMap id="MedicineAuthorizationResultMap" type="com.jc519.search.model.generator.MedicineAuthorization">
+        <constructor>
+            <idArg column="auth_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="company_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="channel_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="control_channel_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="au_control_company_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="medicine_product_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="division_medicine_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="authorization_price" javaType="java.math.BigDecimal" jdbcType="DECIMAL"/>
+            <arg column="status" javaType="java.lang.Byte" jdbcType="TINYINT"/>
+            <arg column="is_delete" javaType="java.lang.Byte" jdbcType="TINYINT"/>
+            <arg column="authorization_remark" javaType="java.lang.String" jdbcType="VARCHAR"/>
+            <arg column="create_user_id" javaType="java.lang.Integer" jdbcType="INTEGER"/>
+            <arg column="create_time" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+        </constructor>
+    </resultMap>
+
+    <select id="selectAllControlMedicine" resultMap="AllControlMedicineResultMap">
+    SELECT
+      g.*,ma.id AS auth_id,ma.channel_id,ma.control_channel_id,ma.`status`,ma.is_delete,ma.authorization_remark,
+      ma.control_company_id AS au_control_company_id,ma.division_medicine_id,ma.create_user_id,ma.authorization_price,ma.create_time
+    FROM (SELECT
+         jmd.id,jmd.medicine_product_id,jc.user_id,jmd.generic_name,jmd.trade_name, img.img_url,
+         jmd.cate_id, jmd.cate_second_id,jmd.cate_third_id,jmd.generic_cate_id,jmd.generic_cate_second_id,
+         jmd.dosage_form_id, jdf.dosage_form_name, jmd.reimbursement_type,jmd.basic_or_common,
+         jmd.specification, jmd.produce_enterprice, jmd.approval_num, jmd.box_num,jmd.unit_id,img.is_delete,
+         jmu.unit_name,jmd.company_id, jc.company_name,jmd.suggested_price, jmd.availability_price
+       FROM jc_medicine_goods jmd
+         LEFT JOIN jc_medicine_dosage_form jdf ON jmd.dosage_form_id = jdf.id
+         LEFT JOIN jc_company jc ON jmd.company_id=jc.id
+         LEFT JOIN jc_medicine_unit jmu ON jmd.unit_id=jmu.id
+         LEFT JOIN (SELECT MAX(create_time),img_url,medicine_id,is_delete FROM jc_medicine_img GROUP BY medicine_id) AS img ON jmd.id = img.medicine_id
+       WHERE
+         jmd.belong_column = 2 AND jmd.is_delete = 0 AND jmd.status = 1 AND img.is_delete = 0
+       GROUP BY jmd.id)g,jc_medicine_authorization ma,jc_medicine_unit u,
+      jc_division_medicine dm,jc_company jc,jc_channel c,jc_channel_company cc
+    WHERE
+      ((ma.is_terminal_authorization = 1  AND ma.company_id=g.company_id) OR (ma.is_terminal_authorization = 0 AND ma.control_channel_id = cc.channel_id))
+      AND g.medicine_product_id = ma.medicine_product_id
+      AND ma.division_medicine_id = dm.id AND dm.is_delete = 0 AND dm.is_use = 0
+      AND cc.company_id = jc.id AND cc.bind_status = 1 AND cc.is_delete = 0 AND u.id = g.unit_id
+      AND u.is_delete = 0 AND g.is_delete = 0 AND ma.is_delete = 0 AND ma.status = 1 AND c.is_delete = 0 AND jc.is_delete = 0
+      AND ((c.enterprise_type = 1 AND c.id = cc.channel_id AND cc.company_id = g.company_id)
+           OR
+           (c.enterprise_type = 2 AND c.parent_enterprise_id = cc.channel_id AND cc.company_id = g.company_id))
+    GROUP BY auth_id;
+    </select>
+
+    <select id="selectJcMedicineResult" resultMap="ResultMap">
+ 		SELECT
+ 			jmd.id, jmd.medicine_product_id,jc.user_id,jmd.generic_name,jmd.trade_name, img.img_url,
+ 			jmd.cate_id, jmd.cate_second_id,jmd.cate_third_id,jmd.generic_cate_id,jmd.generic_cate_second_id,
+ 			jmd.dosage_form_id, jdf.dosage_form_name, jmd.reimbursement_type,jmd.basic_or_common,
+ 			jmd.specification, jmd.produce_enterprice, jmd.approval_num, jmd.box_num,jmd.unit_id,
+ 			jmu.unit_name,jmd.company_id, jc.company_name,jmd.suggested_price, jmd.availability_price
+		FROM
+			jc_medicine_goods jmd
+				LEFT JOIN
+					jc_medicine_dosage_form jdf
+				ON jmd.dosage_form_id = jdf.id
+				LEFT JOIN
+					jc_company jc
+				ON jmd.company_id=jc.id
+				LEFT JOIN
+					jc_medicine_unit jmu
+				ON jmd.unit_id=jmu.id
+				LEFT JOIN
+				(SELECT MAX(create_time),img_url,medicine_id,is_delete FROM jc_medicine_img GROUP BY medicine_id) AS img
+				ON jmd.id = img.medicine_id
+		WHERE
+			jmd.belong_column = #{belongColumn}
+			AND jmd.is_delete = 0
+			AND jmd.status = 1
+			AND img.is_delete = 0
+		GROUP BY
+			jmd.id
+ 	</select>
+
+    <select id="selectDivisionMedicineAuthorizationList" resultMap="MedicineAuthorizationResultMap">
+    SELECT
+    g.id AS good_id,ma.id AS auth_id,g.company_id,ma.channel_id,ma.control_channel_id,ma.`status`,ma.is_delete,ma.authorization_remark,
+    ma.control_company_id AS au_control_company_id,g.medicine_product_id,ma.division_medicine_id,ma.create_user_id,ma.authorization_price,ma.create_time
+    FROM
+    jc_medicine_goods g,jc_medicine_authorization ma,jc_medicine_unit u,
+    jc_division_medicine dm,jc_company jc,jc_channel c,jc_channel_company cc
+    WHERE
+    ma.is_terminal_authorization = 1 AND u.is_delete = 0 AND dm.is_delete = 0 AND dm.is_use = 0
+    AND g.is_delete = 0 AND ma.is_delete = 0 AND ma.status = 1 AND c.is_delete = 0
+    AND jc.is_delete = 0 AND g.medicine_product_id = ma.medicine_product_id AND u.id = g.unit_id
+    AND ma.division_medicine_id = dm.id AND cc.company_id = jc.id AND ma.company_id=g.company_id
+    AND ((c.enterprise_type = 1 AND cc.bind_status = 1 AND cc.is_delete = 0
+    AND c.id = cc.channel_id AND cc.company_id = g.company_id)
+    OR
+    (c.enterprise_type = 2 AND cc.bind_status = 1 AND cc.is_delete = 0
+    AND c.parent_enterprise_id = cc.channel_id AND cc.company_id = g.company_id))
+    AND ma.medicine_product_id = #{medicineProductId} AND g.company_id = #{companyId}
+    GROUP BY
+    auth_id
+    </select>
+
+    <select id="getGroupPrice" parameterType="java.util.Map" resultType="java.math.BigDecimal">
+		SELECT
+            mgp.group_sale_price
+		FROM
+		    jc_medicine_goods g,
+		    jc_company_bind_company cbc,
+		    jc_medicine_group_price mgp
+		WHERE
+		    g.company_id = cbc.company_id
+		    AND g.id = mgp.medicine_id
+            AND cbc.group_id = mgp.group_id
+            AND cbc.bind_company_id = #{companyId,jdbcType=INTEGER}
+		    AND g.id = #{medicineId,jdbcType=INTEGER}
+		    AND g.is_delete=0
+		    AND g.status=1
+		    AND cbc.is_delete=0
+		    AND cbc.bind_status=1
+		    AND mgp.is_delete=0
+	</select>
+
+    <select id="getUpdateControlIds" resultType="Integer">
+		SELECT
+		    g.id AS medicine_goods_id
+        FROM
+        jc_medicine_goods g,
+        jc_medicine_authorization ma,
+        jc_medicine_unit u,
+        jc_division_medicine dm,
+        jc_company jc,
+        jc_channel c,
+        jc_channel_company cc,
+        jc_medicine_img jmi
+        WHERE
+        g.medicine_product_id = ma.medicine_product_id
+        AND u.id = g.unit_id
+        AND ma.division_medicine_id = dm.id
+        AND cc.company_id = jc.id
+        AND jmi.medicine_id=g.id
+        AND ((c.enterprise_type = 1
+            AND c.id = cc.channel_id
+            AND cc.company_id = g.company_id)
+          OR
+            (c.enterprise_type = 2
+            AND c.parent_enterprise_id = cc.channel_id
+            AND cc.company_id = g.company_id))
+        AND (g.update_time > #{lastIndexTime} OR g.create_time > #{lastIndexTime}
+            OR ma.apply_time > #{lastIndexTime} OR ma.create_time > #{lastIndexTime}
+            OR u.update_time > #{lastIndexTime} OR u.create_time > #{lastIndexTime}
+            OR dm.update_time > #{lastIndexTime} OR dm.create_time > #{lastIndexTime}
+            OR jc.info_update_time > #{lastIndexTime} OR jc.create_time > #{lastIndexTime}
+            OR c.update_time > #{lastIndexTime} OR c.create_time > #{lastIndexTime}
+            OR jmi.update_time > #{lastIndexTime} OR jmi.create_time > #{lastIndexTime}
+            OR cc.update_time > #{lastIndexTime} OR cc.create_time > #{lastIndexTime})
+        GROUP BY medicine_goods_id
+    </select>
+
+    <select id="getUpdaControlGoods" resultMap="ResultMap">
+        SELECT jmd.id, jmd.medicine_product_id, jmd.generic_name, jmd.trade_name, img.img_url
+        , jmd.cate_id, jmd.cate_second_id, jmd.cate_third_id, jmd.generic_cate_id, jmd.generic_cate_second_id
+        , jmd.dosage_form_id, jdf.dosage_form_name, jmd.reimbursement_type, jmd.basic_or_common, jmd.specification
+        , jmd.produce_enterprice, jmd.approval_num, jmd.box_num, jmd.unit_id, jmu.unit_name
+        , jmd.company_id, jc.company_name, jmd.suggested_price, jmd.availability_price
+        FROM jc_medicine_goods jmd
+        LEFT JOIN jc_medicine_dosage_form jdf ON jmd.dosage_form_id = jdf.id
+        LEFT JOIN
+				(SELECT MAX(create_time),img_url,medicine_id,is_delete FROM jc_medicine_img GROUP BY medicine_id) AS img
+				ON jmd.id = img.medicine_id
+        LEFT JOIN jc_company jc ON jmd.company_id = jc.id
+        LEFT JOIN jc_medicine_unit jmu ON jmd.unit_id = jmu.id
+        LEFT JOIN
+            jc_medicine_authorization   ma
+            ON
+            ma.medicine_product_id = jmd.medicine_product_id AND ma.is_delete = 0 AND ma.status = 1 AND ma.apply_status = 2
+        LEFT JOIN jc_division_medicine jdm
+            ON jdm.medicine_product_id = jmd.medicine_product_id
+            AND jdm.is_delete = 0 AND jdm.is_use = 0
+        WHERE jmd.belong_column = 2
+        AND jmd.is_delete = 0
+        AND jmd.status = 1
+        AND img.is_delete = 0
+        AND jmd.id = #{id}
+        GROUP BY jmd.id
+    </select>
+
+    <select id="getUpdateNoControlIds" parameterType="java.util.Map" resultType="Integer">
+        SELECT jmg.id
+        FROM jc_medicine_goods jmg
+        LEFT JOIN
+			  jc_medicine_img jmi
+			ON jmg.id=jmi.medicine_id
+			AND jmi.update_time> #{lastIndexTime}
+        WHERE jmg.update_time > #{lastIndexTime}
+        AND jmg.belong_column = 1
+        GROUP BY jmg.id
+    </select>
+
+    <select id="getNoControlGoods" parameterType="java.util.Map" resultMap="ResultMap">
+        SELECT jmd.id, jmd.medicine_product_id, jmd.generic_name, jmd.trade_name, img.img_url
+        , jmd.cate_id, jmd.cate_second_id, jmd.cate_third_id, jmd.generic_cate_id, jmd.generic_cate_second_id
+        , jmd.dosage_form_id, jdf.dosage_form_name, jmd.reimbursement_type, jmd.basic_or_common, jmd.specification
+        , jmd.produce_enterprice, jmd.approval_num, jmd.box_num, jmd.unit_id, jmu.unit_name
+        , jmd.company_id, jc.company_name, jmd.suggested_price, jmd.availability_price
+        FROM jc_medicine_goods jmd
+        LEFT JOIN jc_medicine_dosage_form jdf ON jmd.dosage_form_id = jdf.id
+        LEFT JOIN
+				(SELECT MAX(create_time),img_url,medicine_id,is_delete FROM jc_medicine_img GROUP BY medicine_id) AS img
+				ON jmd.id = img.medicine_id
+        LEFT JOIN jc_company jc ON jmd.company_id = jc.id
+        LEFT JOIN jc_medicine_unit jmu ON jmd.unit_id = jmu.id
+        WHERE jmd.belong_column = 1
+        AND jmd.is_delete = 0
+        AND jmd.status = 1
+        AND img.is_delete = 0
+        AND (jmd.update_time > #{lastIndexTime}
+        OR jmd.create_time > #{lastIndexTime})
+        GROUP BY jmd.id
+    </select>
+
+    <select id="getControlDeleteNames" resultType="String">
+        SELECT
+        g.generic_name AS generic_name
+        FROM
+        jc_medicine_goods g,
+        jc_medicine_authorization ma
+        WHERE
+        g.medicine_product_id = ma.medicine_product_id
+        AND (g.update_time > #{lastIndexTime} OR ma.apply_time > #{lastIndexTime})
+        AND (g.is_delete = 1 OR g.status = 2 OR ma.is_delete = 1 OR ma.status = 2)
+        GROUP BY generic_name
+    </select>
+
+    <select id="getNoControlDeleteNames" resultType="String">
+        SELECT generic_name
+        FROM jc_medicine_goods
+        WHERE update_time > #{lastIndexTime}
+            AND belong_column = 1
+            AND (is_delete = 1 OR status = 2 OR status = 0)
+        GROUP BY generic_name
+    </select>
+
+    <select id="getAddNames" resultType="String">
+        SELECT generic_name
+        FROM jc_medicine_goods
+        WHERE create_time > #{lastIndexTime}
+            AND is_delete = 0
+            AND status = 1
+        GROUP BY generic_name
+    </select>
+
+    <select id="getControlStockNumber" resultType="Integer">
+        SELECT
+        sum(stock_number) AS stock_number
+        FROM
+        jc_warehouse_goods_batch_stock
+        WHERE medicine_id = #{medicineId}
+        GROUP BY
+        medicine_id
+    </select>
+
+    <select id="getExitProduct" resultType="Integer">
+        SELECT
+        ma.medicine_product_id
+        FROM
+        jc_medicine_authorization ma
+        LEFT JOIN
+            jc_division_medicine jdm
+            ON ma.medicine_product_id=jdm.medicine_product_id
+        WHERE ma.medicine_product_id = #{medicineProductId}
+        AND((ma.is_delete=0 AND ma.status = 1 AND ma.apply_status = 2)
+        AND
+          (jdm.is_delete = 0 AND jdm.is_use = 0))
+        GROUP BY
+        ma.medicine_product_id
+    </select>
+
+</mapper>

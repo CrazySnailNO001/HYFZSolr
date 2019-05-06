@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jc519.search.dao.JcDivisionMedicineAdviceMapper">
+
+    <resultMap id="CpMedicineGoodsResult" type="com.jc519.search.web.rest.search.result.CpMedicineGoodsResult">
+        <id property="id" column="id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+        <result column="company_id" jdbcType="INTEGER" property="companyId" />
+        <result property="companyName" column="company_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+
+        <result property="belongColumn" column="belong_column" javaType="java.lang.Byte" jdbcType="TINYINT" />
+        <result property="tradeName" column="trade_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result property="genericName" column="generic_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result property="specification" column="specification" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result property="produceEnterprice" column="produce_enterprice" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <result property="boxNum" column="box_num" javaType="java.lang.Integer" jdbcType="INTEGER" />
+        <result property="unitId" column="unit_id" javaType="java.lang.Integer" jdbcType="INTEGER" />
+        <result property="unitName" column="unit_name" javaType="java.lang.String" jdbcType="VARCHAR" />
+        <!--<result property="isUse" column="is_use" javaType="java.lang.Byte" jdbcType="TINYINT" />-->
+        <result property="authorizationPrice" column="authorization_price" javaType="java.math.BigDecimal" jdbcType="DECIMAL" />
+        <result property="status" column="status" javaType="java.lang.Byte" jdbcType="TINYINT" />
+        <result column="stock_number" jdbcType="INTEGER" property="stockNumber" />
+    </resultMap>
+
+      <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or">
+                <if test="criteria.valid">
+                    <trim prefix="(" prefixOverrides="and" suffix=")">
+                        <foreach collection="criteria.criteria" item="criterion">
+                            <choose>
+                                <when test="criterion.noValue">
+                                    and ${criterion.condition}
+                                </when>
+                                <when test="criterion.singleValue">
+                                    and ${criterion.condition} #{criterion.value}
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                                        #{listItem}
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+
+
+    <sql id="Goods_Column_List">
+        id,medicine_product_id,`status`,company_id,company_name,is_use,
+        belong_column,trade_name,generic_name,specification,produce_enterprice,
+        box_num,unit_id,unit_name,authorization_price,authorization_id,sell_channel_id,sell_ori_channel_id
+    </sql>
+
+    <!-- 获取控销授权商品列表 -->
+    <select id="getControlMedicineGoods" parameterType="com.jc519.search.model.CpMedicineExample" resultMap="CpMedicineGoodsResult">
+        SELECT basc.*,stoc.stock_number from (
+        SELECT
+        <include refid="Goods_Column_List" />
+        FROM
+        (
+        SELECT
+        g.id,ma.id AS authorization_id,ma.`status`,ma.is_delete,ma.apply_status,g.medicine_product_id,ma.channel_id,ma.control_channel_id,
+        g.belong_column,g.trade_name,g.generic_name,g.specification,g.produce_enterprice,g.dosage_form_id,u.id AS unit_id,g.medicine_package,
+        dm.is_use,u.unit_name,g.company_id,jc.company_name,ma.channel_id AS sell_ori_channel_id,IFNULL( c.parent_enterprise_id, c.id ) AS sell_channel_id,
+        ma.company_id AS sell_company_id,g.availability_price,g.suggested_price,ma.authorization_price,g.box_num
+        FROM
+        jc_medicine_goods g,jc_medicine_authorization ma,jc_medicine_unit u,
+        jc_division_medicine dm,jc_company jc,jc_channel c,jc_channel_company cc
+        WHERE
+        g.is_delete = 0 AND ma.is_delete = 0 AND c.is_delete = 0 AND u.is_delete = 0 AND dm.is_delete = 0
+        AND jc.is_delete = 0 AND g.medicine_product_id = ma.medicine_product_id AND u.id = g.unit_id
+        AND c.id = ma.channel_id AND ma.division_medicine_id = dm.id AND cc.company_id = jc.id
+        AND (
+          (c.enterprise_type = 1 AND cc.bind_status = 1 AND cc.is_delete = 0 AND c.id = cc.channel_id
+          AND cc.company_id = g.company_id)
+        OR (c.enterprise_type = 2 AND cc.bind_status = 1 AND cc.is_delete = 0
+          AND c.parent_enterprise_id = cc.channel_id AND cc.company_id = g.company_id)
+        )
+        ) jmmmmm
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause" />
+        </if>
+        GROUP BY
+        id
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+        ) basc LEFT join (
+        SELECT
+        medicine_id,
+        channel_id,
+        sum( jwgbs.stock_number ) AS stock_number,
+        is_delete
+        FROM
+        jc_warehouse_goods_batch_stock jwgbs
+        GROUP BY
+        medicine_id,channel_id) stoc on basc.id = stoc.medicine_id and basc.sell_channel_id = stoc.channel_id
+        and stoc.is_delete = 0
+    </select>
+
+</mapper>
